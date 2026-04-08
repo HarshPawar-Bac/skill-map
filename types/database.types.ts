@@ -14,6 +14,278 @@ export type Database = {
   }
   public: {
     Tables: {
+      endorsement_requests: {
+        Row: {
+          created_at: string | null
+          decline_reason: string | null
+          endorser_email: string
+          endorser_id: string | null
+          expires_at: string
+          id: string
+          requester_id: string
+          skill_id: string
+          status: string
+          token: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          decline_reason?: string | null
+          endorser_email: string
+          endorser_id?: string | null
+          expires_at?: string
+          id?: string
+          requester_id: string
+          skill_id: string
+          status?: string
+          token: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          decline_reason?: string | null
+          endorser_email?: string
+          endorser_id?: string | null
+          expires_at?: string
+          id?: string
+          requester_id?: string
+          skill_id?: string
+          status?: string
+          token?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "endorsement_requests_endorser_id_fkey"
+            columns: ["endorser_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endorsement_requests_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endorsement_requests_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      endorsements: {
+        Row: {
+          assessment: string | null
+          can_edit_until: string | null
+          code_quality_rating: number | null
+          comments: string | null
+          created_at: string | null
+          developer_id: string
+          endorser_id: string
+          id: string
+          problem_solving_rating: number | null
+          proficiency_depth_rating: number | null
+          rating: number | null
+          request_id: string
+          skill_id: string
+          updated_at: string | null
+          would_recommend: boolean | null
+        }
+        Insert: {
+          assessment?: string | null
+          can_edit_until?: string | null
+          code_quality_rating?: number | null
+          comments?: string | null
+          created_at?: string | null
+          developer_id: string
+          endorser_id: string
+          id?: string
+          problem_solving_rating?: number | null
+          proficiency_depth_rating?: number | null
+          rating?: number | null
+          request_id: string
+          skill_id: string
+          updated_at?: string | null
+          would_recommend?: boolean | null
+        }
+        Update: {
+          assessment?: string | null
+          can_edit_until?: string | null
+          code_quality_rating?: number | null
+          comments?: string | null
+          created_at?: string | null
+          developer_id?: string
+          endorser_id?: string
+          id?: string
+          problem_solving_rating?: number | null
+          proficiency_depth_rating?: number | null
+          rating?: number | null
+          request_id?: string
+          skill_id?: string
+          updated_at?: string | null
+          would_recommend?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "endorsements_developer_id_fkey"
+            columns: ["developer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endorsements_endorser_id_fkey"
+            columns: ["endorser_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endorsements_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "endorsement_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endorsements_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evidence: {
+        Row: {
+          created_at: string | null
+          github_repo_url: string
+          github_summary: Json | null
+          id: string
+          live_url: string
+          live_url_valid: boolean | null
+          skill_id: string
+          updated_at: string | null
+          user_id: string
+          video_s3_key: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          github_repo_url: string
+          github_summary?: Json | null
+          id?: string
+          live_url: string
+          live_url_valid?: boolean | null
+          skill_id: string
+          updated_at?: string | null
+          user_id: string
+          video_s3_key: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          github_repo_url?: string
+          github_summary?: Json | null
+          id?: string
+          live_url?: string
+          live_url_valid?: boolean | null
+          skill_id?: string
+          updated_at?: string | null
+          user_id?: string
+          video_s3_key?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: true
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evidence_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_repo_cache: {
+        Row: {
+          expires_at: string | null
+          fetched_at: string | null
+          id: string
+          repo_url: string
+          summary: Json
+        }
+        Insert: {
+          expires_at?: string | null
+          fetched_at?: string | null
+          id?: string
+          repo_url: string
+          summary: Json
+        }
+        Update: {
+          expires_at?: string | null
+          fetched_at?: string | null
+          id?: string
+          repo_url?: string
+          summary?: Json
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          name: string
+          status: string
+          updated_at: string | null
+          user_id: string
+          visibility: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          id?: string
+          name: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+          visibility?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          name?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           availability: string | null

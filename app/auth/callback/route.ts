@@ -5,6 +5,8 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const roleFromQuery = searchParams.get("role");
+  const action = searchParams.get("action");
+  const redirectTo = searchParams.get("redirect_to");
 
   const supabase = await createClient();
 
@@ -42,6 +44,23 @@ export async function GET(request: NextRequest) {
   const { user, session } = data;
   const provider = user.app_metadata?.provider;
 
+  if (action === "connect_github") {
+
+    const userId = searchParams.get('user_id')
+    if (session.provider_token && userId) {
+      await supabase
+        .from("users")
+        .update({
+          github_connected: true,
+          github_username: user.user_metadata?.user_name ?? null,
+          github_token: session.provider_token,
+        })
+        .eq("id", user.id);
+    }
+    const destination = redirectTo || "/dashboard/developer/settings";
+    return NextResponse.redirect(`${origin}${destination}?github=connected`);
+  }
+
   const { data: existingUser } = await supabase
     .from("users")
     .select("role, onboarding_complete")
@@ -64,7 +83,6 @@ export async function GET(request: NextRequest) {
       `${origin}${getDestination(existingUser.role, existingUser.onboarding_complete)}`,
     );
   }
-
 
   const assignedRole = roleFromQuery ?? user.user_metadata?.role ?? "developer";
 
