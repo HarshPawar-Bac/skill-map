@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const PUBLIC_ROUTES = new Set(["/", "/login", "/register", "/terms", "/403"]);
-const PUBLIC_PREFIXES = ["/u/", "/auth/"];
+const PUBLIC_PREFIXES = ["/u/", "/auth/", "/api/"];
+
 
 const ROLE_HOME: Record<string, string> = {
   developer: "/dashboard/developer/skills",
@@ -10,6 +11,13 @@ const ROLE_HOME: Record<string, string> = {
   employer: "/dashboard/employer/shortlists",
   admin: "/admin",
 };
+
+const ROLE_DASHBOARD_PREFIX: Record<string, string> = {
+  developer: "/dashboard/developer",
+  endorser: "/dashboard/endorser",
+  employer: "/dashboard/employer",
+  admin: "/admin",
+};  
 
 function isPublicPath(pathname: string) {
   return (
@@ -45,6 +53,7 @@ export async function middleware(request: NextRequest) {
 
   const { role, onboarding_complete } = profile;
   const roleHome = ROLE_HOME[role] ?? "/dashboard/developer/skills";
+  const roleDashboardPrefix = ROLE_DASHBOARD_PREFIX[role] ?? "/dashboard/developer";
 
   if (!onboarding_complete)
     return pathname.startsWith("/onboarding")
@@ -57,7 +66,10 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/admin") && role !== "admin")
     return NextResponse.redirect(new URL("/403", request.url));
 
-  if (pathname.startsWith("/dashboard") && !pathname.startsWith(roleHome))
+  if (pathname.startsWith("/dashboard/endorser/endorse/"))
+    return response;
+
+  if (pathname.startsWith("/dashboard") && !pathname.startsWith(roleDashboardPrefix))
     return NextResponse.redirect(new URL("/403", request.url));
 
   return response;

@@ -35,7 +35,7 @@ export async function checkUserNameAvailable(
     .select("id")
     .eq("username", username)
     .neq("id", excludeUserId)
-    .single();
+    .maybeSingle();
 
   return !data;
 }

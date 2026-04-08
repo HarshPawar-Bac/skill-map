@@ -61,7 +61,6 @@
             </p>
           </div>
 
-          {/* OAuth */}
           <div className="space-y-3">
             <button
               disabled={loading}
@@ -85,7 +84,6 @@
             </button>
           </div>
 
-          {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200" />
@@ -95,7 +93,6 @@
             </div>
           </div>
 
-          {/* Email/password */}
           <form onSubmit={handleEmailLogin} className="space-y-3">
             <input
               type="email"
